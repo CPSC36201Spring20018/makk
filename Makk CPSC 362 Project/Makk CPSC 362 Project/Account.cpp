@@ -1,211 +1,185 @@
 #include "Account.h"
 #include <iostream>
+#include <iomanip>
 
 Account::Account() { 
 	name = "";
-	account_number = "";
+	accountNumber = "";
 	userID = "";
 	password = "";
 	address = "";
-	phone_number = "";
+	phoneNumber = "";
+	balance = Balance();
+	debitCards[2] = { DebitCard() };
 }
 
-Account::Account(string new_name, string new_userID, string new_password, string new_address, string new_phone_number) {
+Account::Account(string new_name, string new_userID, string new_password, string new_address, string new_phone_number, int new_account_num) {
 	name = new_name;
 	userID = new_userID;
 	password = new_password;
 	address = new_address;
-	phone_number = new_phone_number;
+	phoneNumber = new_phone_number;
+	
+	// TESTING PURPOSES
+	// There is definitely a better way to do this; will cause issues
+	// when deleting an account; ask Alex for explanation
+	string accountNum = "MAKK";
+	if (new_account_num < 10) {
+		accountNum.append("000" + to_string(new_account_num + 1));
+	}
+	else if (new_account_num < 100) {
+		accountNum.append("00" + to_string(new_account_num + 1));
+	}
+	else if (new_account_num < 1000) {
+		accountNum.append("0" + to_string(new_account_num + 1));
+	}
+	else if (new_account_num < 10000) {
+		accountNum.append(to_string(new_account_num + 1));
+	}
+	accountNumber = accountNum;
+
+	balance = Balance();	// Set balance to 0 via constructor
 }
 
-bool Account::add_account(Account account) {
-	list<Account>::iterator it;
-	Account check_accounts;
-
-	for (it = accounts.begin(); it != accounts.end(); it++) {
-		check_accounts = *it;
-
-		if (check_accounts.userID == account.userID) {
-			return false;	// Returns false if the username to be created already exists
-		}
-	}
-
-	account.account_number = "MAKK";
-
-	if (accounts.size() < 9) {
-		account.account_number.append("000" + to_string(accounts.size() + 1));
-	}
-	else if (accounts.size() < 99) {
-		account.account_number.append("00" + to_string(accounts.size() + 1));
-	}
-	else if (accounts.size() < 999) {
-		account.account_number.append("0" + to_string(accounts.size() + 1));
-	}
-	else if (accounts.size() < 9999) {
-		account.account_number.append(to_string(accounts.size() + 1));
-	}
-
-	accounts.push_back(account);
-
-	return true;	// Returns true if username is unique and adds a new account to the list of accounts
+void Account::depositFunds(double amount) {
+	balance.updateBalance(amount, '1');	// 1 for deposit case
 }
 
-void Account::edit_account(Account account) {	// Needs work; implemented this style to make sure it worked
-	list<Account>::iterator delete_it;
-	Account replace_account;
-	int choice;
-
-	cout << "What would you like to change: \n"
-		<< "1) Account holder's name\n"
-		<< "2) Username\n"
-		<< "3) Password\n"
-		<< "4) Address\n"
-		<< "5) Phone Number\n";
-	cin >> choice;
-
-	switch (choice) {
-	case 1:
-		cout << "Name:  ";
-		cin >> account.name;
-		break;
-	case 2:
-		cout << "Username:  ";
-		cin >> account.userID;
-		break;
-	case 3:
-		cout << "Password:  ";
-		cin >> account.password;
-		break;
-	case 4:
-		cout << "Address:  ";
-		cin >> account.address;
-		break;
-	case 5:
-		cout << "Phone Number:  ";
-		cin >> account.phone_number;
-		break;
-	default:
-		cout << "Invalid Option\n";
-	}
-
-	for (list<Account>::iterator it = accounts.begin(); it != accounts.end(); it++) {
-		replace_account = *it;
-
-		if (replace_account.account_number == account.account_number) {
-			delete_it = it;
-			accounts.erase(delete_it);
-			accounts.push_back(account);
-			break;
-		}
-	}
-
-	cout << endl << account.name << endl << account.userID << endl << account.password << endl << account.address << endl << account.phone_number << endl << endl;
+void Account::transferFunds(double amount) {
+	balance.updateBalance(amount, '2');	// 2 for withdraw case
 }
 
-void Account::delete_account(string username) {
-	list<Account>::iterator delete_it;
-	Account account_to_delete;
-	string re_pw;
+void Account::displayAccountInfo() {
+	cout << "Name:  " << this->name << endl
+		<< "Account Number:  " << this->accountNumber << endl
+		<< "Username:  " << this->userID << endl
+		<< "Password:  " << this->password << endl
+		<< "Address:  " << this->address << endl
+		<< "Phone number:  " << this->phoneNumber << endl
+		<< "Balance:  $" << setprecision(2) << fixed << this->balance.checkBalance()
+		<< endl << endl;
+}
 
-	cout << "Re-enter password:  ";
-	cin >> re_pw;
+void Account::editAccount() {
+	string checkPassword;
+	char choice;
+	char answer;
 
-	for (list<Account>::iterator it = accounts.begin(); it != accounts.end(); it++) {
-		account_to_delete = *it;
+	cout << "Enter current password:  ";
+	cin >> checkPassword;
 
-		if ((account_to_delete.userID == username) && (account_to_delete.password == re_pw)) {
-			cout << "Account has been deleted.\n\n";
-			delete_it = it;
-			accounts.erase(delete_it);
-			break;
+	if (checkPassword == this->password) {
+		while (true) {
+			cout << "What would you like to do:\n"
+				<< "1) Change Password\n"
+				<< "2) Change Phone Number\n\n";
+			cin >> choice;
+			cout << endl;
+
+			switch (choice) {
+			case '1':
+				cout << "Enter new password:  ";
+				cin >> this->password;
+				break;
+			case '2':
+				cout << "Enter new phone number:  ";
+				cin >> this->phoneNumber;
+				break;
+			default:
+				cout << "Invalid option\n";
+			}
+			cout << endl
+				<< "Would you like to change anything else (Y / N):  ";
+			cin >> answer;
+			if (toupper(answer) != 'Y') {
+				break;
+			}
 		}
-		else if ((account_to_delete.userID == username) && (account_to_delete.password != re_pw)) {
-			cout << "Incorrect password.\n\n";
-			break;
-		}
-	}
-
-	if (account_to_delete.userID != username) {
-		cout << "Username was not found - could not delete the specified account.\n\n";
 	}
 }
 
-Account Account::retrieve_account(string username, string password) {
-	list<Account>::iterator it;
-	bool exists = false;
-	Account account;
-	Account empty_account;
-
-	for (it = accounts.begin(); it != accounts.end(); it++) {
-		account = *it;
-
-		if ((account.userID == username) && (account.password == password)) {
-			return account;
-		}
-		else if ((account.userID == username) && (account.password != password)) {
-			exists = true;
-			break;
-		}
+void Account::createDebitCard(int cardNum) {
+	if (debitCards[0].doesCardExist() == false) {
+		debitCards[0].setDebitCard(cardNum);
 	}
-
-	if (exists) {
-		cout << "Password for " + account.userID << " is incorrect.\n";
+	else if (debitCards[1].doesCardExist() == false) {
+		debitCards[1].setDebitCard(cardNum);
 	}
 	else {
-		cout << "Account not found.\n";
+		cout << "Error - Debit Card Limit Exceeded\n\n";
 	}
-
-	return empty_account;	// This returns an actual account - Make a conditional check to see if this userID is the same as the one you typed
-							// If it isn't, just reiterate the conditional statement to check the list again. "if (account.userID == name)"
 }
 
-/*
-double Account::transfer_funds(Account current_account, string to_username, double amount) {
-	list<Account>::iterator it;
-	// Balance balance;
-	Account check_account;
+void Account::disableDebitCard() {
+	cout << "Choose card to disable:\n\n";
+	if (debitCards[0].doesCardExist() == false) {
 
-	for (it = accounts.begin(); it != accounts.end(); it++) {
-		check_account = *it;
-
-		if (check_account.userID == to_username) {
-			// balance.update_balance(amount, 1, current_account.userID);	// 1 is withdraw
-			// balance.update_balance(amount, 2, to_username);				// 2 is deposit
-			break;
-		}
 	}
-
-	// return balance.get_balance(current_account.userID);
 }
 
-double Account::deposit_funds(Account account, double amount) {
-	// Balance balance;
-
-	// balance.updateBalance(2, account.userID, amount);
-
-	// return balance.getBalance(account.userID);
+void Account::enableDebitCard() {
+	
 }
 
-double Account::withdraw_funds(Account account, double amount) {
-	// Balance balance;
 
-	// balance.updateBalance(1, account.userID, amount);
+void Account::cancelDebitCard() {
 
-	// return balance.getBalance(account.userID);
 }
-*/
 
-void Account::display_all_accounts() {
-	list<Account>::iterator it;
-	Account output_account;
+// Getters
+string Account::getName() {
+	return this->name;
+}
 
-	for (it = accounts.begin(); it != accounts.end(); it++) {
-		output_account = *it;
-		cout << "Account holder's name:  " << output_account.name << endl
-			<< "Account number:  " << output_account.account_number << endl
-			<< "Username:  " << output_account.userID << endl
-			<< "Password:  " << output_account.password << endl
-			<< "Address:  " << output_account.address << endl
-			<< "Phone number:  " << output_account.phone_number << endl << endl;
-	}
+string Account::getAccountNumber() {
+	return this->accountNumber;
+}
+
+string Account::getUserID() {
+	return this->userID;
+}
+
+string Account::getPassword() {
+	return this->password;
+}
+
+string Account::getAddress() {
+	return this->address;
+}
+
+string Account::getPhoneNumber() {
+	return this->phoneNumber;
+}
+
+double Account::getBalance() {
+	return this->balance.checkBalance();
+}
+
+// Setters
+void Account::setName(string name) {
+	this->name = name;
+}
+
+void Account::setAccountNumber(string accountNumber) {
+	this->accountNumber = accountNumber;
+}
+
+void Account::setUserID(string userID) {
+	this->userID = userID;
+}
+
+void Account::setPassword(string password) {
+	this->password = password;
+}
+
+void Account::setAddress(string address) {
+	this->address = address;
+}
+
+void Account::setPhoneNumber(string phoneNumber) {
+	this->phoneNumber = phoneNumber;
+}
+
+void Account::setBalance(double amount) {
+	this->balance.updateBalance(amount, '3');
 }

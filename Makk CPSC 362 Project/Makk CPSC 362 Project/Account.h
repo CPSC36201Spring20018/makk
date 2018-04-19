@@ -1,8 +1,8 @@
 #ifndef _ACCOUNT_H
 #define _ACCOUNT_H
 
-//#include "DebitCard.h"
-//#include "Balance.h"
+#include "DebitCard.h"
+#include "Balance.h"
 #include <string>
 #include <list>
 
@@ -10,30 +10,54 @@ using namespace std;
 
 class Account {
 private:
-	list<Account> accounts;
-
+	Balance balance;
+	DebitCard debitCards[2];
 	string name;
-	string account_number;
+	string accountNumber;
 	string userID;
 	string password;
 	string address;
-	string phone_number;
+	string phoneNumber;
 
 public:
 	Account();	// Default Constructor
-	Account(string, string, string, string, string);	// Overloaded Constructor
+	Account(string, string, string, string, string, int);	// Overloaded Constructor
 	~Account() { } ;	// Destructor
 
-	bool add_account(Account);	// Add a new account
-	void edit_account(Account);	// Edit an account
-	void delete_account(string);	// Delete an account
-	Account retrieve_account(string, string);	// Retrieve an account; for controller to find the password
+	// Account information
+	void displayAccountInfo();
+	void editAccount();
+//	void deleteAccount(string);		Most likely will delete this function
 
-	double transfer_funds(Account, string, double);
-	double deposit_funds(Account, double);
-	double withdraw_funds(Account, double);
+	// Balance
+	void transferFunds(double);
+	void depositFunds(double);
 
-	void display_all_accounts();	// Test function to make sure everything was stored correctly
+	// Debit 
+	void createDebitCard(int);
+	void disableDebitCard();
+	void enableDebitCard();
+	void cancelDebitCard();
+
+	// Getters
+	string getName();
+	string getAccountNumber();
+	string getUserID();
+	string getPassword();
+	string getAddress();
+	string getPhoneNumber();
+	double getBalance();
+//	string getCard();
+
+	// Setters
+	void setName(string);
+	void setAccountNumber(string);
+	void setUserID(string);
+	void setPassword(string);
+	void setAddress(string);
+	void setPhoneNumber(string);
+	void setBalance(double);
+//	void setCard(string);
 };
 
 #endif
