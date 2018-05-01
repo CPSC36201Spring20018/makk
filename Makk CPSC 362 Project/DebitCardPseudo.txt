@@ -1,0 +1,131 @@
+void editDebitCard()
+{
+	char choice;
+	char answer;
+	
+	while (true) 
+	{
+			cout << "What would you like to do:" << endl;
+			cout << "1) Request New Debit Card" << endl;
+			cout << "2) Enabled Debit Card" << endl;
+			cout << "3) Disable Debit Card" << endl;
+			cout << "4) Cancel Debit Card" <<  endl << endl;
+			cin >> choice;
+			
+			cout << endl;
+			
+			switch (choice) 
+			{
+			case '1':
+				//createDebitCard();
+				break;
+			case '2':
+				int enableCard;
+				"Enter debit card number you wish to enable: ";
+				cin >> enableCard;
+				//enableDebitCard(enableCard);
+				break;
+			case '3':
+				int disableDebitCard;
+				"Enter debit card number you wish to disable: ";
+				cin >> disableDebitCard;
+				//disableDebitCard(disableCard);
+				break;
+			case '4':
+				int cancelCard;
+				"Enter debit card number you wish to delete: ";
+				cin >> cancelDebitCard(cancelCard);
+				break;
+			default:
+				cout << "Invalid option." << endl;
+			}
+			
+			cout << endl;
+			
+			cout << "Would you like to change anything else (Y / N):  ";
+			cin >> answer;
+			
+			if (toupper(answer) != 'Y') 
+			{
+				break;
+			}
+	}
+}
+
+void createDebitCard(int cardNum)
+{
+	if (debitCards[0] == 0) //0 as in empty
+	{
+		debitCards[0] = cardNum;
+	}
+	else if (debitCards[1] == 0)
+	{
+		debitCards[1] = cardNum;
+	}
+	else
+	{
+		cout << "Error: Maximum number or debit cards reached." << endl;
+	}
+}
+
+void enableDebitCard(int enableCard)
+{
+	if (debitCards[0] == 0 && debitCards[1] == 0)
+	{
+		cout << "Error: You have no saved debit cards!";
+	}
+	else if (debitCards[0] == enableCard)
+	{
+		//set status to enabled
+	}
+	else if (debitCards[1] == enableCard)
+	{
+		//set status to enabled
+	}
+	else
+	{
+		cout << "Error: debit card number entered does not exist." << endl;
+	}
+}
+
+void disableDebitCard(int disableCard)
+{
+	if (debitCards[0] == 0 && debitCards[1] == 0)
+	{
+		cout << "Error: You have no saved debit cards!";
+	}
+	else if (debitCards[0] == disableCard)
+	{
+		//set status to disabled
+	}
+	else if (debitCards[1] == disableCard)
+	{
+		//set status to disabled
+	}
+	else
+	{
+		cout << "Error: debit card number entered does not exist." << endl;
+	}
+}
+
+void cancelDebitCard(int cancelCard)
+{
+	if (debitCards[0] == 0 && debitCards[1] == 0)
+	{
+		cout << "Error: You have no saved debit cards!";
+	}
+	else if (debitCards[0] == cancelCard)
+	{
+		debitCards[0] = 0;
+	}
+	else if (debitCards[1] == cancelCard)
+	{
+		debitCards[1] = 0;
+	}
+	else
+	{
+		cout << "Error: debit card number entered does not exist." << endl;
+	}
+}
+
+
