@@ -63,7 +63,10 @@ Controller::~Controller() {
 			accountFile << printCard->getDebitCardNumber() << endl << printCard->getStatus() << endl;
 			delete printCard;
 		}
-		accountFile << saveAccount->getBalance() << endl;
+		accountFile << saveAccount->getBalance();
+		if (accountList.size() != 1) {
+			accountFile << endl;
+		}
 		accountList.pop_front();
 		delete saveAccount;
 	}
@@ -145,7 +148,21 @@ void Controller::Login() {
 
 // Create a new account
 void Controller::CreateAccount() {
-	Account* newAccount = new Account(keyGen);
+	bool nameTaken = false;
+	string id;
+	cout << "Enter a user ID:" << endl;
+	do {
+		nameTaken = false;
+		cin.ignore();
+		getline(cin, id);
+		for (auto const& iter : accountList) {
+			if (id == iter->getUserID()) {
+				cout << "That user ID has already been taken. Please enter a new one: " << endl;
+				nameTaken = true;
+			}
+		}
+	} while (nameTaken);
+	Account* newAccount = new Account(id, keyGen);
 	accountList.push_back(newAccount);
 	keyGen++;
 }

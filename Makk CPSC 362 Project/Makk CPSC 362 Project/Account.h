@@ -23,7 +23,7 @@ private:
 
 public:
 	Account();
-	Account(int);
+	Account(string, int);
 	Account(string, string, string, string, string, string, list<DebitCard*>, double);
 	~Account();
 	void displayAccountInfo();

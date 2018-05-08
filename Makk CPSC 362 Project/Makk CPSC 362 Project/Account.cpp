@@ -12,20 +12,19 @@ Account::Account() {
 }
 
 // Overloaded constructor to create new accounts
-Account::Account(int key) { 
-	
+Account::Account(string validID, int key) { 
+	userID = validID;
+	cout << "Enter a password:" << endl;
+	cin >> password;
 	cout << "Enter your full name:" << endl;
 	cin.ignore();
 	getline(cin, name);
-	cout << "Enter a user ID:" << endl;
-	cin >> userID;
-	cout << "Enter a password:" << endl;
-	cin >> password;
 	cout << "Enter your full address:" << endl;
 	cin.ignore();
 	getline(cin, address);
-	cout << "Enter your phone number, with no spaces:" << endl;
-	cin >> phoneNumber;
+	cout << "Enter your phone number:" << endl;
+	cin.ignore();
+	getline(cin, phoneNumber);
 	string accountNum = "";
 	if (key < 10) {
 		accountNum.append("000" + to_string(key));
