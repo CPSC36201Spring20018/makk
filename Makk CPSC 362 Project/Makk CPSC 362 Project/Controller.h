@@ -11,12 +11,12 @@ using namespace std;
 class Controller {
 private:
 	list <Account*> accountList;
+	int keyGen;
 public:
 	Controller();
 	~Controller();
-	bool Login();
-	bool Logout();
-	bool CreateAccount();
+	void Login();
+	void CreateAccount();
 };
 
 #endif

@@ -10,8 +10,14 @@ private:
 
 public:
 	Balance();
+	Balance(double);
 	void updateBalance(double, char);
-	double checkBalance();
+	double getBalance();
+
+//	friend ostream& operator<<(ostream& os, const Balance& b) {
+//		os << b.balance << endl;
+//		return os;
+//	}
 };
 
 #endif

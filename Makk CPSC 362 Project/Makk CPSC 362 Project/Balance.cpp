@@ -1,12 +1,17 @@
 #include "Balance.h"
 
-//creates initial balance when account is created
+// Creates initial balance when account is created
 Balance::Balance() 
 {
 	balance = 0.0;
 }
 
-//this function will withdraw or deposit
+// Overloaded constructor for previous balances
+Balance::Balance(double load_balance) {
+	balance = load_balance;
+}
+
+// Withdraw or deposit funds into balance
 void Balance::updateBalance(double amount, char option) 
 {
 	if (option == '1') 
@@ -23,8 +28,8 @@ void Balance::updateBalance(double amount, char option)
 	}
 }
 
-//this function returns the current balance of the account
-double Balance::checkBalance() 
+// Returns the current balance of the account
+double Balance::getBalance() 
 {
 	return balance;
 }

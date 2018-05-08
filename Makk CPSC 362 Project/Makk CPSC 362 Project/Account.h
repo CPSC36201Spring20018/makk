@@ -5,13 +5,15 @@
 #include "Balance.h"
 #include <string>
 #include <list>
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 
 class Account {
 private:
 	Balance balance;
-	DebitCard debitCards[2];
+	list <DebitCard*> debitCardList;
 	string name;
 	string accountNumber;
 	string userID;
@@ -20,44 +22,49 @@ private:
 	string phoneNumber;
 
 public:
-	Account();	// Default Constructor
-	Account(string, string, string, string, string, int);	// Overloaded Constructor
-	~Account() { } ;	// Destructor
-
-	// Account information
+	Account();
+	Account(int);
+	Account(string, string, string, string, string, string, list<DebitCard*>, double);
+	~Account();
 	void displayAccountInfo();
+	void displayWelcomeInfo();
 	void editAccount();
-//	void deleteAccount(string);		Most likely will delete this function
-
-	// Balance
-	void transferFunds(double);
+	double transferFunds();
+	void depositFunds();
 	void depositFunds(double);
-
-	// Debit 
-	void createDebitCard(int);
-	void disableDebitCard();
-	void enableDebitCard();
-	void cancelDebitCard();
-
-	// Getters
+	int manageDebitCards(int);
+	int createDebitCard(int);
 	string getName();
 	string getAccountNumber();
 	string getUserID();
 	string getPassword();
 	string getAddress();
 	string getPhoneNumber();
+	list<DebitCard*> getDebitCardList();
 	double getBalance();
-//	string getCard();
 
-	// Setters
-	void setName(string);
-	void setAccountNumber(string);
-	void setUserID(string);
-	void setPassword(string);
-	void setAddress(string);
-	void setPhoneNumber(string);
-	void setBalance(double);
-//	void setCard(string);
+
+//	friend ostream& operator<<(ostream& os, const Account& a) {
+//		os << a.name << endl << a.accountNumber << endl << a.userID << endl << a.password << endl
+//			<< a.address << endl << a.phoneNumber << endl;
+//		os << a.debitCardList.size() << endl;
+//		for (int i = 0; i < a.debitCardList.size(); i++) {
+//			DebitCard* tempCard = a.debitCardList.front();
+//			a.debitCardList.pop_front();
+//			os << tempCard;
+//		}
+//		os << a.balance;
+//		return os;
+//	}
+
+	// Extraction operator
+//	friend istream& operator>>(istream& is, Account& a)
+//	{
+		// read in individual members of s
+//		is
+//		return is;
+//	}
+
 };
 
 #endif
